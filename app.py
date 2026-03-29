@@ -87,25 +87,32 @@ for i, ticker in enumerate(tickers_selecionados):
 st.markdown("---")
 
 # --- Gráfico 1: Preço histórico ---
-st.subheader("Preço de Fechamento (R$)")
+st.subheader("Preço de Fechamento")
 fig_preco = go.Figure()
+tem_btc = "BTC-USD" in tickers_selecionados
 for ticker in tickers_selecionados:
     df = dados[ticker]
     cfg = acoes_config[ticker]
+    moeda = cfg["moeda"]
+    eh_btc = ticker == "BTC-USD"
     fig_preco.add_trace(go.Scatter(
         x=df.index,
         y=df["Close"],
         name=cfg["nome"],
         line=dict(color=cfg["cor"], width=2),
-        hovertemplate=f"<b>{cfg['nome']}</b><br>Data: %{{x|%d/%m/%Y}}<br>Preço: R$ %{{y:.2f}}<extra></extra>"
+        yaxis="y2" if eh_btc else "y",
+        hovertemplate=f"<b>{cfg['nome']}</b><br>Data: %{{x|%d/%m/%Y}}<br>Preço: {moeda} %{{y:,.2f}}<extra></extra>"
     ))
-fig_preco.update_layout(
+layout_preco = dict(
     xaxis_title="Data",
-    yaxis_title="Preço (R$)",
+    yaxis=dict(title="Preço (R$)"),
     hovermode="x unified",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     height=400
 )
+if tem_btc:
+    layout_preco["yaxis2"] = dict(title="Preço BTC (US$)", overlaying="y", side="right")
+fig_preco.update_layout(**layout_preco)
 st.plotly_chart(fig_preco, use_container_width=True)
 
 # --- Gráfico 2: Retorno acumulado ---
