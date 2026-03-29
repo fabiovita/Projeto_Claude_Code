@@ -74,13 +74,15 @@ for i, ticker in enumerate(tickers_selecionados):
     minimo = df["Low"].min()
 
     with cols[i]:
+        moeda = cfg["moeda"]
+        label_ticker = ticker.replace(".SA", "").replace("-USD", "")
         st.metric(
-            label=f"{cfg['nome']} ({ticker.replace('.SA', '')})",
-            value=f"R$ {preco_atual:.2f}",
+            label=f"{cfg['nome']} ({label_ticker})",
+            value=f"{moeda} {preco_atual:,.2f}",
             delta=f"{variacao_dia:+.2f}% hoje"
         )
         st.caption(f"Retorno no período: **{retorno:+.2f}%**")
-        st.caption(f"Máx: R$ {maximo:.2f} | Mín: R$ {minimo:.2f}")
+        st.caption(f"Máx: {moeda} {maximo:,.2f} | Mín: {moeda} {minimo:,.2f}")
 
 st.markdown("---")
 
