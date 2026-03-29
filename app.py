@@ -30,9 +30,10 @@ periodo = periodo_opcoes[periodo_label]
 st.sidebar.markdown("---")
 st.sidebar.subheader("Ações")
 acoes_config = {
-    "PETR4.SA": {"nome": "Petrobras", "cor": "#009B3A", "exibir": st.sidebar.checkbox("Petrobras (PETR4)", value=True)},
-    "ITUB4.SA": {"nome": "Itaú",      "cor": "#003087", "exibir": st.sidebar.checkbox("Itaú (ITUB4)",      value=True)},
-    "VALE3.SA": {"nome": "Vale",       "cor": "#0099CC", "exibir": st.sidebar.checkbox("Vale (VALE3)",       value=True)},
+    "PETR4.SA": {"nome": "Petrobras", "cor": "#009B3A", "moeda": "R$",  "exibir": st.sidebar.checkbox("Petrobras (PETR4)", value=True)},
+    "ITUB4.SA": {"nome": "Itaú",      "cor": "#003087", "moeda": "R$",  "exibir": st.sidebar.checkbox("Itaú (ITUB4)",      value=True)},
+    "VALE3.SA": {"nome": "Vale",       "cor": "#0099CC", "moeda": "R$",  "exibir": st.sidebar.checkbox("Vale (VALE3)",       value=True)},
+    "BTC-USD":  {"nome": "Bitcoin",    "cor": "#F7931A", "moeda": "US$", "exibir": st.sidebar.checkbox("Bitcoin (BTC)",     value=True)},
 }
 
 tickers_selecionados = [t for t, cfg in acoes_config.items() if cfg["exibir"]]
