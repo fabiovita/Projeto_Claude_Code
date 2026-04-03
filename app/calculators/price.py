@@ -20,6 +20,7 @@ def calcular_price(
     num_parcelas: int,
     primeira_parcela: date,
     carencia: int = 0,
+    carencia_tipo: str = "capitalizado",
 ) -> pd.DataFrame:
     """
     Retorna DataFrame com as colunas:
@@ -29,18 +30,25 @@ def calcular_price(
     saldo = valor
     pmt = None
 
-    for i in range(1, num_parcelas + 1):
+    total_meses = carencia + num_parcelas
+    for i in range(1, total_meses + 1):
         vencimento = primeira_parcela + relativedelta(months=i - 1)
         juros = saldo * taxa_mensal
 
         if i <= carencia:
-            # Durante carência total: sem pagamento, juros capitalizados
-            prestacao = 0.0
-            amort = 0.0
-            saldo_final = saldo + juros
+            if carencia_tipo == "juros_pagos":
+                # Paga apenas os juros; saldo não se altera
+                prestacao = juros
+                amort = 0.0
+                saldo_final = saldo
+            else:
+                # Capitalizado: sem pagamento, juros incorporados ao saldo
+                prestacao = 0.0
+                amort = 0.0
+                saldo_final = saldo + juros
         else:
             if pmt is None:
-                pmt = calcular_pmt(saldo, taxa_mensal, num_parcelas - carencia)
+                pmt = calcular_pmt(saldo, taxa_mensal, num_parcelas)
             amort = pmt - juros
             prestacao = pmt
             saldo_final = max(saldo - amort, 0.0)

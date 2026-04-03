@@ -13,6 +13,7 @@ def calcular_sac(
     num_parcelas: int,
     primeira_parcela: date,
     carencia: int = 0,
+    carencia_tipo: str = "capitalizado",
 ) -> pd.DataFrame:
     """
     Retorna DataFrame com as colunas:
@@ -22,18 +23,25 @@ def calcular_sac(
     saldo = valor
     amortizacao = None
 
-    for i in range(1, num_parcelas + 1):
+    total_meses = carencia + num_parcelas
+    for i in range(1, total_meses + 1):
         vencimento = primeira_parcela + relativedelta(months=i - 1)
         juros = saldo * taxa_mensal
 
         if i <= carencia:
-            # Durante carência total: sem pagamento, juros capitalizados
-            prestacao = 0.0
-            amort = 0.0
-            saldo_final = saldo + juros
+            if carencia_tipo == "juros_pagos":
+                # Paga apenas os juros; saldo não se altera
+                prestacao = juros
+                amort = 0.0
+                saldo_final = saldo
+            else:
+                # Capitalizado: sem pagamento, juros incorporados ao saldo
+                prestacao = 0.0
+                amort = 0.0
+                saldo_final = saldo + juros
         else:
             if amortizacao is None:
-                amortizacao = saldo / (num_parcelas - carencia)
+                amortizacao = saldo / num_parcelas
             amort = amortizacao
             prestacao = juros + amort
             saldo_final = max(saldo - amort, 0.0)
