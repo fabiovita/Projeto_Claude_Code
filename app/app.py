@@ -8,6 +8,10 @@ sys.path.insert(0, os.path.dirname(__file__))
 import database as db
 from pages import clientes, endividamento, simulador, fluxo_caixa
 
+# ── Versão ────────────────────────────────────────────────────────────────────
+APP_VERSION = "1.0.0"
+APP_ULTIMA_MODIFICACAO = "20/04/2026"
+
 # ── Inicialização ─────────────────────────────────────────────────────────────
 db.init_db()
 
@@ -211,6 +215,11 @@ with st.sidebar:
                 st.session_state.pop("cliente_selecionado_id", None)
                 st.session_state["pagina"] = "Clientes"
                 st.rerun()
+
+    # Rodapé de versão
+    st.divider()
+    st.caption(f"Versão {APP_VERSION}")
+    st.caption(f"Última modificação: {APP_ULTIMA_MODIFICACAO}")
 
 # ── Roteamento ────────────────────────────────────────────────────────────────
 pagina = st.session_state["pagina"]
